@@ -1,0 +1,128 @@
+:root {
+  --ink: #16202b;
+  --muted: #64748b;
+  --line: #dde3ea;
+  --paper: #f7f8fa;
+  --accent: #1f6feb;
+  --danger: #b4232c;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: system-ui, "Pretendard", "Apple SD Gothic Neo", sans-serif;
+  line-height: 1.6;
+}
+
+main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 48px 20px 80px;
+}
+
+header h1 {
+  margin: 0 0 6px;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+}
+
+.path {
+  margin: 0 0 32px;
+  color: var(--muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.path span { color: var(--line); padding: 0 2px; }
+
+.composer {
+  display: grid;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 28px;
+}
+
+input, textarea {
+  font: inherit;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  color: inherit;
+  resize: vertical;
+}
+
+input:focus-visible, textarea:focus-visible, button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+button {
+  font: inherit;
+  font-weight: 600;
+  padding: 9px 16px;
+  border: none;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  justify-self: start;
+}
+
+button:disabled { background: #b9c4d2; cursor: not-allowed; }
+
+button.ghost {
+  background: none;
+  color: var(--danger);
+  font-weight: 500;
+  font-size: 13px;
+  padding: 4px 8px;
+  flex-shrink: 0;
+}
+
+.notice {
+  padding: 14px 16px;
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.notice-error { border-color: #f0c2c5; color: var(--danger); }
+
+.notice code {
+  background: #fff;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.memos { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+
+.memos li {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.memos h2 { margin: 0; font-size: 16px; }
+.memos p { margin: 4px 0 0; font-size: 14px; color: #3f4a58; }
+
+time {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
