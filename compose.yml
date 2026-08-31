@@ -1,0 +1,70 @@
+services:
+  # ────────────── DB (PostgreSQL) ──────────────
+  db:
+    image: postgres:16-alpine
+    container_name: dg-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      TZ: Asia/Seoul
+    ports:
+      - "5432:5432"          # DBeaver 등으로 직접 붙어볼 때 사용
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # 이 폴더의 .sql은 DB가 "처음 만들어질 때 한 번만" 실행됩니다
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # ────────────── API (FastAPI, 데이터 계층) ──────────────
+  api:
+    build: ./api
+    container_name: dg-api
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+    ports:
+      - "8000:8000"          # 문서: http://localhost:8000/docs
+    volumes:
+      - ./api:/app           # 코드를 고치면 바로 반영됩니다
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health')\""]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # ────────────── BACK (Spring Boot, 중간 계층) ──────────────
+  back:
+    build: ./back
+    container_name: dg-back
+    environment:
+      API_BASE_URL: http://api:8000   # localhost가 아니라 서비스 이름
+    ports:
+      - "8080:8080"
+    depends_on:
+      api:
+        condition: service_healthy
+
+  # ────────────── FRONT (React + Vite) ──────────────
+  front:
+    build: ./front
+    container_name: dg-front
+    environment:
+      VITE_BACK_URL: http://localhost:8080  # 브라우저에서 호출하므로 localhost
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./front:/app
+      - /app/node_modules    # 호스트 폴더가 컨테이너의 node_modules를 덮지 않게
+    depends_on:
+      - back
+
+volumes:
+  postgres_data:
