@@ -1,0 +1,20 @@
+# 환경변수
+.env
+
+# Node
+node_modules/
+dist/
+
+# Python
+__pycache__/
+*.pyc
+venv/
+
+# Java / Gradle
+build/
+.gradle/
+
+# 에디터
+.idea/
+.vscode/
+.DS_Store
