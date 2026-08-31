@@ -1,0 +1,12 @@
+server:
+  port: 8080
+
+# 컨테이너 안에서는 localhost가 아니라 서비스 이름(api)으로 부릅니다
+api:
+  base-url: ${API_BASE_URL:http://api:8000}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
